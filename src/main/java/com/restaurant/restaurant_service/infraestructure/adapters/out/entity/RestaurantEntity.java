@@ -1,5 +1,7 @@
 package com.restaurant.restaurant_service.infraestructure.adapters.out.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,9 +24,9 @@ public class RestaurantEntity {
     private String address;
     private String cuisineType;
     private String opningHours;
-    private String logUrl;
-    private String primaryColor;
-    private String fontFamily;
-    private String layoutType;
+    private String google_refresh_token;
+    private String google_access_token;
+    private Date google_token_expiry_date;
+    private Boolean is_google_connected;
 
 }

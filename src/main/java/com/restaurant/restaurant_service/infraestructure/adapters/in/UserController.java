@@ -35,7 +35,7 @@ public class UserController {
     private final IUserUsesCases useCase;
     private final IUserMapper mapper;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserDtoResponse> createUser(@Valid @RequestBody UserDtoRequest requestDto){
         User user = mapper.toDomainDto(requestDto);
         User createdUser= useCase.createUser(user);

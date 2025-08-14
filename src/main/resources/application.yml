@@ -7,3 +7,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+logging:
+  level:
+    com.restaurant.restaurant_service.infraestructure.adapters.webFeign.GoogleTokenClient: DEBUG
+
+google:
+  client:
+    id: "44434235597-cprmr8tcfkb6fnk5aj8v97k7lrf0u87k.apps.googleusercontent.com"
+    secret: "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"
+  redirect.uri: "http://localhost:8080/restaurants/auth/google/callback"
+  scope: "https://www.googleapis.com/auth/business.manage"
