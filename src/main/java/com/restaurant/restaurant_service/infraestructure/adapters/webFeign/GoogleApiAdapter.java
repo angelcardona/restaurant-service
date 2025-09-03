@@ -20,6 +20,7 @@ public class GoogleApiAdapter implements GoogleAuthPort {
     private final static Logger log= Logger.getLogger(GoogleApiAdapter.class.getName());
 
     private final GoogleTokenClient googleTokenClient;
+    
 
     @Value("${google.client.id}")
     private String clientId;
@@ -47,6 +48,22 @@ public class GoogleApiAdapter implements GoogleAuthPort {
             this.clientSecret, 
             this.redirectUri,
             "authorization_code" 
+        );
+    }
+
+    @Override
+    public TokenResponseDto refreshAccessToken(String refreshToken) {
+        log.info("Refresh token access with: " +
+                "grant_type=refresh_token, " +
+                "client_id=" + this.clientId + ", " +
+                "client_secret=" + this.clientSecret + ", " +
+                "refresh_token=" + refreshToken);
+
+        return googleTokenClient.refreshAccessToken(
+            "refreshToken",
+            this.clientId,
+            this.clientSecret,
+            refreshToken
         );
     }
 }

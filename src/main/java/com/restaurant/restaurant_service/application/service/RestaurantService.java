@@ -8,8 +8,10 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 import com.restaurant.restaurant_service.application.ports.in.IRestaurantUseCases;
+import com.restaurant.restaurant_service.application.ports.out.GoogleAuthPort;
 import com.restaurant.restaurant_service.application.ports.out.IRestaurantRepositoryPort;
 import com.restaurant.restaurant_service.domain.model.Restaurant;
+import com.restaurant.restaurant_service.infraestructure.adapters.in.dto.TokenResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class RestaurantService implements IRestaurantUseCases{
     private final static Logger log= Logger.getLogger(RestaurantService.class.getName());
     private final IRestaurantRepositoryPort repositoryPort;
+    private final GoogleAuthPort googleAuthPort;
 
     @Override
     public Restaurant createRestaurant(Restaurant restaurant) {
@@ -69,6 +72,23 @@ public class RestaurantService implements IRestaurantUseCases{
             return repositoryPort.save(restaurant);
         
         }
+    public void synchronizeMenu(Long restaurantId){
+        log.info("Iniciaando sincronizacion de menu para resturant id" + restaurantId);
+        Restaurant restaurant= repositoryPort.findById(restaurantId)
+                               .orElseThrow(()->  new RuntimeException("Restaurant not Found"));
+        if(!restaurant.getIsGoogleConnected()){
+            log.warning("El restaurant id" + restaurantId + " no esta conectado a google");
+            return;
+        }
+        if(restaurant.getGoogleTokenExpiryDate().isBefore(LocalDateTime.now())){
+            log.warning("El token de google del restaurant id" + restaurantId + " ha expirado");
+            TokenResponseDto newTokenResponse=googleAuthPort.refreshAccessToken(restaurant.getGoogleRefreshToken());
+            restaurant.setGoogleAccesToken(newTokenResponse.getAccessToken());
+            restaurant.setGoogleTokenExpiryDate(LocalDateTime.now().plusSeconds(newTokenResponse.getExpiresIn()));
+            repositoryPort.save(restaurant);
+            log.info("Token de google actualizado para restaurant id" + restaurantId);
+        }
+    }
 
 
 }

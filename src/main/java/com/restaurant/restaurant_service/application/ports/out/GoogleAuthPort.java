@@ -5,5 +5,6 @@ import com.restaurant.restaurant_service.infraestructure.adapters.in.dto.TokenRe
 public interface GoogleAuthPort {
 
     TokenResponseDto exchangeCodeForTokens(String code, String redirectUri);
+    TokenResponseDto refreshAccessToken(String refreshToken);
 
 }

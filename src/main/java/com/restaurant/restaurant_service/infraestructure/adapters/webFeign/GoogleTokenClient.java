@@ -23,4 +23,11 @@ public interface GoogleTokenClient {
         @RequestParam("redirect_uri") String redirectUri,
         @RequestParam("grant_type") String grantType
     );
+    @PostMapping(value="/token",consumes = "application/x-www-form-urlencoded")
+    TokenResponseDto refreshAccessToken(
+        @RequestParam("grant_type") String grantType,
+        @RequestParam("refresh_token") String refreshToken,
+        @RequestParam("client_id") String clientId,
+        @RequestParam("client_secret") String clientSecret
+    );
 }
